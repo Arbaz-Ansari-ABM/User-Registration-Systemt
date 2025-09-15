@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Registration</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>User Registration</h2>
+    <div class="input-wrapper"><input type="text" id="first_name" placeholder=" "><label>First Name</label></div>
+    <div class="input-wrapper"><input type="text" id="last_name" placeholder=" "><label>Last Name</label></div>
+    <div class="input-wrapper"><input type="text" id="contact" placeholder=" "><label>Contact</label></div>
+    <div class="input-wrapper"><input type="email" id="email" placeholder=" "><label>Email</label></div>
+    <div class="input-wrapper"><input type="text" id="course" placeholder=" "><label>Course (MCA, BCA, etc)</label></div>
+    <div class="input-wrapper"><input type="text" id="address" placeholder=" "><label>Address</label></div>
+    <button onclick="submitForm()">Submit <span id="spinner"></span></button>
+    <p id="responseMsg"></p>
+  </div>
+
+  <script>
+    async function submitForm() {
+      const data = {
+        first_name: document.getElementById("first_name").value,
+        last_name: document.getElementById("last_name").value,
+        contact: document.getElementById("contact").value,
+        email: document.getElementById("email").value,
+        course: document.getElementById("course").value,
+        address: document.getElementById("address").value
+      };
+
+      const spinner = document.getElementById("spinner");
+      const responseMsg = document.getElementById("responseMsg");
+      spinner.style.display = "inline-block";
+      responseMsg.textContent = "";
+
+      try {
+        const response = await fetch("/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        responseMsg.textContent = result.message;
+      } catch (err) {
+        responseMsg.textContent = "Something went wrong.";
+      } finally {
+        spinner.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
